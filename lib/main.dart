@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'donnees/depot_biens.dart';
+import 'donnees/depot_pieces.dart';
 import 'ecrans/ecran_biens.dart';
 import 'jetons/theme.dart';
 
@@ -20,7 +21,10 @@ class Hestea extends StatelessWidget {
       // l'application. Un selecteur de theme dans le produit serait un reglage
       // de plus a tenir, et la charte porte deja ses deux jeux complets.
       themeMode: ThemeMode.system,
-      home: EcranBiens(depot: DepotBiensEnMemoire()),
+      home: EcranBiens(
+        depot: DepotBiensEnMemoire(),
+        depotPieces: DepotPiecesEnMemoire(),
+      ),
     );
   }
 }

@@ -9,13 +9,17 @@ import 'package:flutter/material.dart';
 
 import '../domaine/bien.dart';
 import '../donnees/depot_biens.dart';
+import '../donnees/depot_pieces.dart';
 import '../jetons/jetons.dart';
 import '../jetons/theme.dart';
+import 'ecran_modifier.dart';
 
 class EcranBiens extends StatefulWidget {
   final DepotBiens depot;
+  final DepotPieces depotPieces;
 
-  const EcranBiens({super.key, required this.depot});
+  const EcranBiens(
+      {super.key, required this.depot, required this.depotPieces});
 
   @override
   State<EcranBiens> createState() => _EcranBiensState();
@@ -65,7 +69,8 @@ class _EcranBiensState extends State<EcranBiens> {
                           texte: 'Ajoutez-en un ci-dessous : trois façons '
                               'd’arriver, et la même suite.',
                         ),
-                      for (final b in biens) _Rangee(bien: b),
+                      for (final b in biens)
+                        _Rangee(bien: b, depotPieces: widget.depotPieces),
                       const SizedBox(height: 10),
                       const _AjouterUnBien(),
                     ],
@@ -118,8 +123,9 @@ class _EnTete extends StatelessWidget {
 /// pas l'ecran, pour qu'aucun second endroit ne puisse la contredire.
 class _Rangee extends StatelessWidget {
   final Bien bien;
+  final DepotPieces depotPieces;
 
-  const _Rangee({required this.bien});
+  const _Rangee({required this.bien, required this.depotPieces});
 
   @override
   Widget build(BuildContext context) {
@@ -136,11 +142,16 @@ class _Rangee extends StatelessWidget {
         borderRadius: BorderRadius.circular(Rayons.rLg),
         child: InkWell(
           borderRadius: BorderRadius.circular(Rayons.rLg),
-          // ⚠️ LE DETAIL RAPIDE N'EST PAS ENCORE LA. Le prototype l'ouvre en
-          // pop-in sans quitter la liste ; ici, presser ne fait rien encore, et
-          // ce commentaire est la seule chose qui l'annonce — le prochain lot
-          // le cable ou retire l'InkWell.
-          onTap: null,
+          // ⚠️ LE DETAIL RAPIDE EN POP-IN N'EST TOUJOURS PAS LA : le prototype
+          // ouvre une feuille SANS quitter la liste, et l'ecran de modification
+          // n'en est que la sortie. Presser mene donc directement a la
+          // modification — un pas de moins que la maquette, pas un pas de plus.
+          onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      EcranModifier(bien: bien, depot: depotPieces),
+                ),
+              ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(13, 11, 13, 11),
             child: Row(
